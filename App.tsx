@@ -39,7 +39,7 @@ const App: React.FC = () => {
   const startupFileRef = useRef<HTMLInputElement>(null);
   const globalFileRef = useRef<HTMLInputElement>(null);
   
-  // Ref for Game State (to avoid stale closures in intervals)
+  // Ref for Game State (to avoid stale closures in intervals) xxxx
   const gameRef = useRef(game);
 
   // Pacing Protocol State
