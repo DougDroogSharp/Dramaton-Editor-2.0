@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dramaton Game Editor v2.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              diesel: {
+                black: '#0a0908',
+                dark: '#141210',
+                panel: '#1e1c1a',
+                border: '#3e3832',
+                gold: '#cba96d',
+                goldDim: 'rgba(203, 169, 109, 0.1)',
+                rust: '#a64d2d',
+                rustDim: 'rgba(166, 77, 45, 0.1)',
+                steel: '#c0cfda',
+                green: '#6b7a5a',
+                paper: '#dccfbb',
+              }
+            },
+            fontFamily: {
+              mono: ['"Courier New"', 'Courier', 'monospace'],
+              sans: ['"Impact"', '"Arial Black"', 'sans-serif'],
+            },
+            boxShadow: {
+              'diesel-glow': '0 0 15px rgba(203, 169, 109, 0.2)',
+              'diesel-rust-glow': '0 0 15px rgba(166, 77, 45, 0.2)',
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+      body {
+        background-color: #0a0908;
+        color: #dccfbb;
+        font-family: 'Courier New', Courier, monospace;
+      }
+      /* Custom Scrollbar - Industrial Style */
+      ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+        background: #141210;
+        border-left: 1px solid #3e3832;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #3e3832;
+        border: 1px solid #141210;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #cba96d;
+      }
+      
+      /* CRT/Analog Animations */
+      @keyframes flicker {
+        0% { opacity: 0.95; }
+        5% { opacity: 0.85; }
+        10% { opacity: 0.95; }
+        15% { opacity: 1; }
+        50% { opacity: 0.95; }
+        100% { opacity: 1; }
+      }
+      
+      .analog-flicker {
+        animation: flicker 4s infinite;
+      }
+
+      /* Scanlines */
+      .scanlines {
+        background: linear-gradient(
+          to bottom,
+          rgba(255,255,255,0),
+          rgba(255,255,255,0) 50%,
+          rgba(0,0,0,0.1) 50%,
+          rgba(0,0,0,0.1)
+        );
+        background-size: 100% 4px;
+      }
+
+      /* SFX Animations */
+      @keyframes sfx-shake {
+        0% { transform: translate(1px, 1px) rotate(0deg); }
+        10% { transform: translate(-1px, -2px) rotate(-1deg); }
+        20% { transform: translate(-3px, 0px) rotate(1deg); }
+        30% { transform: translate(3px, 2px) rotate(0deg); }
+        40% { transform: translate(1px, -1px) rotate(1deg); }
+        50% { transform: translate(-1px, 2px) rotate(-1deg); }
+        60% { transform: translate(-3px, 1px) rotate(0deg); }
+        70% { transform: translate(3px, 1px) rotate(-1deg); }
+        80% { transform: translate(-1px, -1px) rotate(1deg); }
+        90% { transform: translate(1px, 2px) rotate(0deg); }
+        100% { transform: translate(1px, -2px) rotate(-1deg); }
+      }
+
+      @keyframes sfx-jiggle {
+        0% { transform: rotate(0deg); }
+        25% { transform: rotate(5deg); }
+        50% { transform: rotate(0deg); }
+        75% { transform: rotate(-5deg); }
+        100% { transform: rotate(0deg); }
+      }
+
+      @keyframes sfx-pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+      }
+
+      /* New Electric / Lightning Animation - Aggressive & Colorful */
+      @keyframes sfx-electric {
+         0% { 
+            filter: brightness(1.5) drop-shadow(0 0 5px yellow); 
+            transform: translateX(0) scale(1); 
+            opacity: 1;
+         }
+         10% { 
+            filter: brightness(2) drop-shadow(-5px 0 10px orange) contrast(200%); 
+            transform: translateX(3px) scale(1.02);
+         }
+         20% { 
+            filter: brightness(1) drop-shadow(5px 0 5px red) sepia(1); 
+            transform: translateX(-3px) skewX(-5deg); 
+         }
+         30% { opacity: 0.8; }
+         40% { 
+            filter: brightness(3) invert(1) drop-shadow(0 0 15px cyan); 
+            transform: translateX(2px) translateY(-2px); 
+         }
+         50% { 
+            filter: brightness(1) drop-shadow(0 0 5px yellow); 
+            transform: scale(0.98); 
+         }
+         60% { opacity: 1; }
+         70% { 
+            filter: brightness(2) drop-shadow(5px 5px 0px red); 
+            transform: translateX(-2px) rotate(2deg); 
+         }
+         80% { 
+            filter: brightness(1.2) contrast(1.5); 
+            transform: translateX(1px); 
+         }
+         90% { 
+            filter: hue-rotate(90deg) brightness(2); 
+            transform: translateX(-1px); 
+         }
+         100% { 
+            filter: brightness(1.5) drop-shadow(0 0 5px yellow); 
+            transform: translateX(0); 
+         }
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "recharts": "https://aistudiocdn.com/recharts@^3.5.1",
+    "uuid": "https://aistudiocdn.com/uuid@^13.0.0",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "idb-keyval": "https://unpkg.com/idb-keyval@6.2.1/dist/index.js"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
